@@ -1,0 +1,108 @@
+package it.univaq.swa.soccorsoweb.model.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "missione", indexes = {
+        @Index(name = "idx_stato", columnList = "stato"),
+        @Index(name = "idx_caposquadra", columnList = "caposquadra_id")
+})
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Missione {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Relazione One-to-One con RichiestaSoccorso
+    @OneToOne
+    @JoinColumn(name = "richiesta_id", nullable = false, unique = true)
+    private RichiestaSoccorso richiesta;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String obiettivo;
+
+    private String posizione;
+
+    @Column(precision = 10, scale = 8)
+    private BigDecimal latitudine;
+
+    @Column(precision = 11, scale = 8)
+    private BigDecimal longitudine;
+
+    // Relazione Many-to-One con User (caposquadra)
+    @ManyToOne
+    @JoinColumn(name = "caposquadra_id", nullable = false)
+    private User caposquadra;
+
+    @Column(name = "inizio_at")
+    private LocalDateTime inizioAt = LocalDateTime.now();
+
+    @Column(name = "fine_at")
+    private LocalDateTime fineAt;
+
+    @Column(name = "livello_successo")
+    private Integer livelloSuccesso;
+
+    @Column(name = "commenti_finali", columnDefinition = "TEXT")
+    private String commentiFinali;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatoMissione stato = StatoMissione.IN_CORSO;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Relazione Many-to-Many con User (operatori squadra)
+    @ManyToMany
+    @JoinTable(
+            name = "missione_operatori",
+            joinColumns = @JoinColumn(name = "missione_id"),
+            inverseJoinColumns = @JoinColumn(name = "operatore_id")
+    )
+    private Set<User> operatori = new HashSet<>();
+
+    // Relazione Many-to-Many con Mezzi
+    @ManyToMany
+    @JoinTable(
+            name = "missione_mezzi",
+            joinColumns = @JoinColumn(name = "missione_id"),
+            inverseJoinColumns = @JoinColumn(name = "mezzo_id")
+    )
+    private Set<Mezzo> mezzi = new HashSet<>();
+
+    // Relazione Many-to-Many con Materiali
+    @ManyToMany
+    @JoinTable(
+            name = "missione_materiali",
+            joinColumns = @JoinColumn(name = "missione_id"),
+            inverseJoinColumns = @JoinColumn(name = "materiale_id")
+    )
+    private Set<Materiale> materiali = new HashSet<>();
+
+    // Relazione One-to-Many con Aggiornamenti
+    @OneToMany(mappedBy = "missione", cascade = CascadeType.ALL)
+    private Set<AggiornamentoMissione> aggiornamenti = new HashSet<>();
+
+    // Enum per lo stato
+    public enum StatoMissione {
+        IN_CORSO, CHIUSA
+    }
+}

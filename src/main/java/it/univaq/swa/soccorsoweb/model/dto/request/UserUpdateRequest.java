@@ -1,0 +1,29 @@
+package it.univaq.swa.soccorsoweb.model.dto.request;
+
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserUpdateRequest {
+
+    @Size(max = 100, message = "Il nome non può superare i 100 caratteri")
+    private String nome;
+
+    @Size(max = 100, message = "Il cognome non può superare i 100 caratteri")
+    private String cognome;
+
+    private LocalDate dataNascita;
+
+    @Size(max = 20, message = "Il telefono non può superare i 20 caratteri")
+    private String telefono;
+
+    private String indirizzo;
+}
