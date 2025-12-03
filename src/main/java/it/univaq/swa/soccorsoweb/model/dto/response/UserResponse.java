@@ -27,4 +27,5 @@ public class UserResponse {
     private Set<RoleResponse> roles;
     private Set<PatenteResponse> patenti;
     private Set<AbilitaResponse> abilita;
+    private String token;  // JWT token per autenticazione
 }

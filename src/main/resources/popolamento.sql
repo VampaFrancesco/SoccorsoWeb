@@ -234,12 +234,12 @@ INSERT INTO abilita (id, nome, descrizione) VALUES
 -- Password: "Password123!"
 -- Hash BCrypt: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO
 INSERT INTO user (id, email, password, nome, cognome, data_nascita, telefono, indirizzo, attivo) VALUES
-                                                                                                     (1, 'admin@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Mario', 'Rossi', '1980-05-15', '3331234567', 'Via Roma 1, L\'Aquila', TRUE),
-                                                                                                     (2, 'operatore1@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Luca', 'Bianchi', '1985-03-20', '3339876543', 'Via Garibaldi 10, L\'Aquila', TRUE),
-                                                                                                     (3, 'operatore2@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Giulia', 'Verdi', '1990-07-12', '3335551234', 'Corso Vittorio 5, L\'Aquila', TRUE),
-                                                                                                     (4, 'operatore3@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Marco', 'Neri', '1988-11-30', '3337778899', 'Piazza Duomo 3, L\'Aquila', TRUE),
-                                                                                                     (5, 'operatore4@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Sara', 'Gialli', '1992-02-14', '3332223344', 'Via XX Settembre 8, L\'Aquila', TRUE),
-                                                                                                     (6, 'operatore5@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Alessandro', 'Blu', '1987-09-25', '3334445566', 'Viale Gran Sasso 12, L\'Aquila', TRUE);
+                                                                                                     (1, 'admin@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Mario', 'Rossi', '1980-05-15', '3331234567', 'Via Roma 1, L''Aquila', TRUE),
+                                                                                                     (2, 'operatore1@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Luca', 'Bianchi', '1985-03-20', '3339876543', 'Via Garibaldi 10, L''Aquila', TRUE),
+                                                                                                     (3, 'operatore2@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Giulia', 'Verdi', '1990-07-12', '3335551234', 'Corso Vittorio 5, L''Aquila', TRUE),
+                                                                                                     (4, 'operatore3@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Marco', 'Neri', '1988-11-30', '3337778899', 'Piazza Duomo 3, L''Aquila', TRUE),
+                                                                                                     (5, 'operatore4@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Sara', 'Gialli', '1992-02-14', '3332223344', 'Via XX Settembre 8, L''Aquila', TRUE),
+                                                                                                     (6, 'operatore5@soccorsoweb.it', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhkO', 'Alessandro', 'Blu', '1987-09-25', '3334445566', 'Viale Gran Sasso 12, L''Aquila', TRUE);
 
 -- 5. ASSEGNAZIONE RUOLI
 INSERT INTO user_roles (user_id, role_id) VALUES
@@ -288,27 +288,27 @@ INSERT INTO materiale (id, nome, descrizione, tipo, quantita, disponibile) VALUE
 -- 10. RICHIESTE DI SOCCORSO
 INSERT INTO richiesta_soccorso (id, descrizione, indirizzo, latitudine, longitudine, nome_segnalante, email_segnalante, telefono_segnalante, ip_origine, token_convalida, stato, convalidata_at) VALUES
 -- ATTIVE
-(1, 'Incendio appartamento al terzo piano, fumo denso', 'Via Castello 45, L\'Aquila', 42.3498, 13.3995, 'Paolo Verdi', 'paolo.verdi@email.it', '3338889990', '192.168.1.10', NULL, 'ATTIVA', NOW()),
+(1, 'Incendio appartamento al terzo piano, fumo denso', 'Via Castello 45, L''Aquila', 42.3498, 13.3995, 'Paolo Verdi', 'paolo.verdi@email.it', '3338889990', '192.168.1.10', NULL, 'ATTIVA', NOW()),
 (2, 'Persona caduta durante escursione sul Gran Sasso', 'Sentiero Campo Imperatore', 42.4467, 13.5561, 'Anna Rossi', 'anna.rossi@email.it', '3331112233', '192.168.1.11', NULL, 'ATTIVA', NOW()),
 -- INVIATA
 (3, 'Auto fuori strada, conducente impossibilitato a uscire', 'SS17 km 45', 42.2856, 13.5742, 'Marco Bianchi', 'marco.bianchi@email.it', '3335556677', '192.168.1.12', 'token-abc123xyz789', 'INVIATA', NULL),
 -- IN_CORSO
-(4, 'Malore improvviso, persona anziana con dolori al petto', 'Piazza del Duomo 8, L\'Aquila', 42.3505, 13.3995, 'Carla Neri', 'carla.neri@email.it', '3334445566', '192.168.1.13', NULL, 'IN_CORSO', NOW()),
-(5, 'Perdita di gas in condominio, evacuazione in corso', 'Via Garibaldi 22, L\'Aquila', 42.3512, 13.4001, 'Giuseppe Gialli', 'giuseppe.gialli@email.it', '3337778899', '192.168.1.14', NULL, 'IN_CORSO', NOW()),
+(4, 'Malore improvviso, persona anziana con dolori al petto', 'Piazza del Duomo 8, L''Aquila', 42.3505, 13.3995, 'Carla Neri', 'carla.neri@email.it', '3334445566', '192.168.1.13', NULL, 'IN_CORSO', NOW()),
+(5, 'Perdita di gas in condominio, evacuazione in corso', 'Via Garibaldi 22, L''Aquila', 42.3512, 13.4001, 'Giuseppe Gialli', 'giuseppe.gialli@email.it', '3337778899', '192.168.1.14', NULL, 'IN_CORSO', NOW()),
 -- CHIUSA
-(6, 'Gatto bloccato su albero a 5 metri', 'Parco del Castello, L\'Aquila', 42.3489, 13.3989, 'Elena Blu', 'elena.blu@email.it', '3339990011', '192.168.1.15', NULL, 'CHIUSA', NOW()),
-(7, 'Allagamento scantinato per rottura tubatura', 'Via Roma 102, L\'Aquila', 42.3501, 13.3998, 'Roberto Viola', 'roberto.viola@email.it', '3332223344', '192.168.1.16', NULL, 'CHIUSA', NOW()),
+(6, 'Gatto bloccato su albero a 5 metri', 'Parco del Castello, L''Aquila', 42.3489, 13.3989, 'Elena Blu', 'elena.blu@email.it', '3339990011', '192.168.1.15', NULL, 'CHIUSA', NOW()),
+(7, 'Allagamento scantinato per rottura tubatura', 'Via Roma 102, L''Aquila', 42.3501, 13.3998, 'Roberto Viola', 'roberto.viola@email.it', '3332223344', '192.168.1.16', NULL, 'CHIUSA', NOW()),
 -- IGNORATA
-(8, 'Segnalazione incendio (risultato barbecue)', 'Via Parco 15, L\'Aquila', 42.3495, 13.3992, 'Simone Grigi', 'simone.grigi@email.it', '3336667788', '192.168.1.17', NULL, 'IGNORATA', NOW());
+(8, 'Segnalazione incendio (risultato barbecue)', 'Via Parco 15, L''Aquila', 42.3495, 13.3992, 'Simone Grigi', 'simone.grigi@email.it', '3336667788', '192.168.1.17', NULL, 'IGNORATA', NOW());
 
 -- 11. MISSIONI
 INSERT INTO missione (id, richiesta_id, obiettivo, posizione, latitudine, longitudine, caposquadra_id, inizio_at, fine_at, livello_successo, commenti_finali, stato) VALUES
 -- IN_CORSO
-(1, 4, 'Soccorso sanitario urgente per malore', 'Piazza del Duomo 8, L\'Aquila', 42.3505, 13.3995, 2, NOW(), NULL, NULL, NULL, 'IN_CORSO'),
-(2, 5, 'Intervento perdita gas, messa in sicurezza', 'Via Garibaldi 22, L\'Aquila', 42.3512, 13.4001, 4, NOW(), NULL, NULL, NULL, 'IN_CORSO'),
+(1, 4, 'Soccorso sanitario urgente per malore', 'Piazza del Duomo 8, L''Aquila', 42.3505, 13.3995, 2, NOW(), NULL, NULL, NULL, 'IN_CORSO'),
+(2, 5, 'Intervento perdita gas, messa in sicurezza', 'Via Garibaldi 22, L''Aquila', 42.3512, 13.4001, 4, NOW(), NULL, NULL, NULL, 'IN_CORSO'),
 -- CHIUSA
-(3, 6, 'Recupero animale bloccato su albero', 'Parco del Castello, L\'Aquila', 42.3489, 13.3989, 3, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 45 MINUTE, 5, 'Gatto recuperato con successo. Nessun danno.', 'CHIUSA'),
-(4, 7, 'Intervento per allagamento scantinato', 'Via Roma 102, L\'Aquila', 42.3501, 13.3998, 6, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 3 HOUR, 3, 'Acqua pompata via, ma danni strutturali significativi.', 'CHIUSA');
+(3, 6, 'Recupero animale bloccato su albero', 'Parco del Castello, L''Aquila', 42.3489, 13.3989, 3, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 45 MINUTE, 5, 'Gatto recuperato con successo. Nessun danno.', 'CHIUSA'),
+(4, 7, 'Intervento per allagamento scantinato', 'Via Roma 102, L''Aquila', 42.3501, 13.3998, 6, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 3 HOUR, 3, 'Acqua pompata via, ma danni strutturali significativi.', 'CHIUSA');
 
 -- 12. ASSEGNAZIONE OPERATORI
 INSERT INTO missione_operatori (missione_id, operatore_id, notificato_at, assegnato_at) VALUES
@@ -354,175 +354,3 @@ UNION ALL SELECT 'Aggiornamenti', COUNT(*) FROM aggiornamento_missione;
 -- ==============================================================================
 -- FINE SCRIPT
 -- ==============================================================================
-
-CREATE TABLE abilita
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    descrizione LONGTEXT              NULL,
-    nome        VARCHAR(100)          NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE aggiornamento_missione
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime              NULL,
-    descrizione LONGTEXT              NOT NULL,
-    admin_id    BIGINT                NOT NULL,
-    missione_id BIGINT                NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE materiale
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime              NULL,
-    descrizione LONGTEXT              NULL,
-    disponibile BIT(1)                NOT NULL,
-    nome        VARCHAR(100)          NOT NULL,
-    quantita    INT                   NOT NULL,
-    tipo        VARCHAR(50)           NULL,
-    updated_at  datetime              NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE mezzo
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime              NULL,
-    descrizione LONGTEXT              NULL,
-    disponibile BIT(1)                NOT NULL,
-    nome        VARCHAR(100)          NOT NULL,
-    targa       VARCHAR(20)           NULL,
-    tipo        VARCHAR(50)           NULL,
-    updated_at  datetime              NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE missione
-(
-    id               BIGINT AUTO_INCREMENT NOT NULL,
-    commenti_finali  LONGTEXT              NULL,
-    created_at       datetime              NULL,
-    fine_at          datetime              NULL,
-    inizio_at        datetime              NULL,
-    latitudine       DECIMAL(10, 8)        NULL,
-    livello_successo INT                   NULL,
-    longitudine      DECIMAL(11, 8)        NULL,
-    obiettivo        LONGTEXT              NOT NULL,
-    posizione        VARCHAR(255)          NULL,
-    stato            ENUM                  NOT NULL,
-    updated_at       datetime              NULL,
-    caposquadra_id   BIGINT                NOT NULL,
-    richiesta_id     BIGINT                NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE patente
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    descrizione LONGTEXT              NULL,
-    tipo        VARCHAR(50)           NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE richiesta_soccorso
-(
-    id                  BIGINT AUTO_INCREMENT NOT NULL,
-    convalidata_at      datetime              NULL,
-    created_at          datetime              NULL,
-    descrizione         LONGTEXT              NOT NULL,
-    email_segnalante    VARCHAR(255)          NOT NULL,
-    foto_url            VARCHAR(255)          NULL,
-    indirizzo           VARCHAR(255)          NOT NULL,
-    ip_origine          VARCHAR(45)           NULL,
-    latitudine          DECIMAL(10, 8)        NULL,
-    longitudine         DECIMAL(11, 8)        NULL,
-    nome_segnalante     VARCHAR(100)          NOT NULL,
-    stato               ENUM                  NOT NULL,
-    telefono_segnalante VARCHAR(20)           NULL,
-    token_convalida     VARCHAR(255)          NULL,
-    updated_at          datetime              NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE `role`
-(
-    id   BIGINT AUTO_INCREMENT NOT NULL,
-    name VARCHAR(50)           NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE user
-(
-    id           BIGINT AUTO_INCREMENT NOT NULL,
-    attivo       BIT(1)                NOT NULL,
-    cognome      VARCHAR(100)          NOT NULL,
-    created_at   datetime              NULL,
-    data_nascita date                  NULL,
-    email        VARCHAR(255)          NOT NULL,
-    indirizzo    VARCHAR(255)          NULL,
-    nome         VARCHAR(100)          NOT NULL,
-    password     VARCHAR(255)          NOT NULL,
-    telefono     VARCHAR(20)           NULL,
-    updated_at   datetime              NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
-);
-
-CREATE TABLE user_abilita
-(
-    livello    VARCHAR(50) NOT NULL,
-    abilita_id BIGINT      NOT NULL,
-    user_id    BIGINT      NOT NULL,
-    CONSTRAINT `PRIMARY` PRIMARY KEY (abilita_id, user_id)
-);
-
-ALTER TABLE richiesta_soccorso
-    ADD CONSTRAINT UK2e684yf9x4cplq4lrlfpruius UNIQUE (token_convalida);
-
-ALTER TABLE abilita
-    ADD CONSTRAINT UK4qaqv34lnn8q5fjh3enxd8372 UNIQUE (nome);
-
-ALTER TABLE `role`
-    ADD CONSTRAINT UK8sewwnpamngi6b1dwaa88askk UNIQUE (name);
-
-ALTER TABLE missione
-    ADD CONSTRAINT UKgiqcqelqyrn355yrxo0b2wu8o UNIQUE (richiesta_id);
-
-ALTER TABLE patente
-    ADD CONSTRAINT UKlkp2xiav5weffyx3tpoglropf UNIQUE (tipo);
-
-ALTER TABLE user
-    ADD CONSTRAINT UKob8kqyqqgmefl0aco34akdtpe UNIQUE (email);
-
-CREATE INDEX idx_email_segnalante ON richiesta_soccorso (email_segnalante);
-
-CREATE INDEX idx_stato ON richiesta_soccorso (stato);
-
-CREATE INDEX idx_stato ON richiesta_soccorso (stato);
-
-ALTER TABLE missione
-    ADD CONSTRAINT FK275j9uxcwitr55gi5v4i8gmcl FOREIGN KEY (caposquadra_id) REFERENCES user (id) ON DELETE NO ACTION;
-
-CREATE INDEX idx_caposquadra ON missione (caposquadra_id);
-
-ALTER TABLE aggiornamento_missione
-    ADD CONSTRAINT FK5tmuyc12enusnlyewhgu736je FOREIGN KEY (missione_id) REFERENCES missione (id) ON DELETE NO ACTION;
-
-CREATE INDEX FK5tmuyc12enusnlyewhgu736je ON aggiornamento_missione (missione_id);
-
-ALTER TABLE user_abilita
-    ADD CONSTRAINT FK8ope65172kq7pihw8piihyxaw FOREIGN KEY (abilita_id) REFERENCES abilita (id) ON DELETE NO ACTION;
-
-ALTER TABLE missione
-    ADD CONSTRAINT FKah2le7wd4ba13jordnspl5vau FOREIGN KEY (richiesta_id) REFERENCES richiesta_soccorso (id) ON DELETE NO ACTION;
-
-ALTER TABLE user_abilita
-    ADD CONSTRAINT FKbnv88vad437cfwxbedte7suy9 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE NO ACTION;
-
-CREATE INDEX FKbnv88vad437cfwxbedte7suy9 ON user_abilita (user_id);
-
-ALTER TABLE aggiornamento_missione
-    ADD CONSTRAINT FKd9p3rsw0g2436e63ensl2006h FOREIGN KEY (admin_id) REFERENCES user (id) ON DELETE NO ACTION;
-
-CREATE INDEX FKd9p3rsw0g2436e63ensl2006h ON aggiornamento_missione (admin_id);

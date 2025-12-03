@@ -56,7 +56,7 @@ public class User {
     // Relazioni Many-to-Many con Role (semplice, senza campi aggiuntivi)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_role",
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
