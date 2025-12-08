@@ -8,10 +8,7 @@ import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,7 +57,7 @@ public class RichiestaApiController {
      * @param nuovoStato
      * @return ResponseEntity<RichiestaSoccorsoResponse>
      */
-    @GetMapping("/modifica-stato/{id}/{nuovoStato}")
+    @PutMapping("/modifica-stato/{id}/{nuovoStato}")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATORE')")
     public ResponseEntity<RichiestaSoccorsoResponse> modificaStatoRichiesta(
             @PathVariable Long id,
@@ -69,6 +66,13 @@ public class RichiestaApiController {
         if (response != null) {
             return ResponseEntity.ok().body(response);
         }
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/elimina-richiesta/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> eliminaRichiesta(@PathVariable Long id) {
+        richiestaService.eliminaRichiesta(id);
         return ResponseEntity.noContent().build();
     }
 }

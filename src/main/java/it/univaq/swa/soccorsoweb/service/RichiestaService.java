@@ -148,5 +148,7 @@ public class RichiestaService {
     }
 
 
-
+    public void eliminaRichiesta(Long id) {
+        richiestaSoccorsoRepository.deleteById(id);
+    }
 }
