@@ -1,9 +1,11 @@
 package it.univaq.swa.soccorsoweb.swa.api;
 
+import it.univaq.swa.soccorsoweb.model.dto.request.RichiestaSoccorsoUpdateRequest;
 import it.univaq.swa.soccorsoweb.model.dto.response.MissioneResponse;
 import it.univaq.swa.soccorsoweb.model.dto.response.RichiestaSoccorsoResponse;
 import it.univaq.swa.soccorsoweb.service.RichiestaService;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,6 +64,21 @@ public class RichiestaApiController {
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATORE')")
     public ResponseEntity<RichiestaSoccorsoResponse> dettagliRichiesta(@PathVariable Long id) {
         return ResponseEntity.ok().body(richiestaService.dettagliRichiesta(id));
+    }
+
+    /** API: Modifica richiesta di soccorso
+     * Metodo per modificare parzialmente una richiesta di soccorso
+     * @param id ID della richiesta di soccorso
+     * @param updateRequest Dati da aggiornare
+     * @return ResponseEntity<RichiestaSoccorsoResponse>
+     */
+    // PATCH /swa/api/richieste/{id}
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATORE')")
+    public ResponseEntity<RichiestaSoccorsoResponse> aggiornaRichiesta(
+            @PathVariable Long id,
+            @Valid @RequestBody RichiestaSoccorsoUpdateRequest updateRequest) {
+        return ResponseEntity.ok().body(richiestaService.aggiornaRichiesta(id, updateRequest));
     }
 
 

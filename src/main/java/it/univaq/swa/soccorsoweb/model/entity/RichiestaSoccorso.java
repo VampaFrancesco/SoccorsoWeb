@@ -76,7 +76,7 @@ public class RichiestaSoccorso {
 
     // Enum per lo stato
     public enum StatoRichiesta {
-        INVIATA, ATTIVA, IN_CORSO, CHIUSA, IGNORATA, CONVALIDATA, ANNULLATA
+        INVIATA, ATTIVA, IN_CORSO, CHIUSA, IGNORATA, CONVALIDATA, ANNULLATA, TUTTE
     }
 
     @PrePersist

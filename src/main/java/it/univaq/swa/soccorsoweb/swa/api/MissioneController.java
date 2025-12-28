@@ -2,6 +2,7 @@ package it.univaq.swa.soccorsoweb.swa.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import it.univaq.swa.soccorsoweb.model.dto.request.MissioneRequest;
+import it.univaq.swa.soccorsoweb.model.dto.request.MissioneUpdateRequest;
 import it.univaq.swa.soccorsoweb.model.dto.response.MissioneResponse;
 import it.univaq.swa.soccorsoweb.service.MissioneService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class MissioneController {
     private final MissioneService missioneService;
 
     /**
-     * API 5: Visualizza missioni non positive < 5
+     * API 5: Visualizza missioni chiuse non positive < 5
      * @return ResponseEntity<List<MissioneResponse>>
      */
     // GET /swa/api/missioni
@@ -70,6 +71,21 @@ public class MissioneController {
     @PreAuthorize("hasAnyRole('ADMIN','OPERATORE')")
     public ResponseEntity<MissioneResponse> dettagliMissione(@PathVariable Long id){
         return ResponseEntity.ok().body(missioneService.dettagliMissione(id));
+    }
+
+    /** API: Modifica missione
+     * Metodo per modificare parzialmente una missione
+     * @param id ID della missione
+     * @param updateRequest Dati da aggiornare
+     * @return ResponseEntity<MissioneResponse>
+     */
+    // PATCH /swa/api/missioni/{id}
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATORE')")
+    public ResponseEntity<MissioneResponse> aggiornaMissione(
+            @PathVariable Long id,
+            @Valid @RequestBody MissioneUpdateRequest updateRequest) {
+        return ResponseEntity.ok().body(missioneService.aggiornaMissione(id, updateRequest));
     }
 
 
@@ -125,6 +141,12 @@ public class MissioneController {
             @PathVariable Long id,
             @RequestParam("valutazione") Integer valutazione) {
         return ResponseEntity.ok().body(missioneService.valutaMissione(id, valutazione));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATORE')")
+    public ResponseEntity<List<MissioneResponse>> tutteLeMissioni() {
+        return ResponseEntity.ok().body(missioneService.tutteLeMissioni());
     }
 
 

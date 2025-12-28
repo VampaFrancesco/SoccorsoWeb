@@ -2,6 +2,7 @@ package it.univaq.swa.soccorsoweb.service;
 
 import it.univaq.swa.soccorsoweb.mapper.MissioneMapper;
 import it.univaq.swa.soccorsoweb.model.dto.request.MissioneRequest;
+import it.univaq.swa.soccorsoweb.model.dto.request.MissioneUpdateRequest;
 import it.univaq.swa.soccorsoweb.model.dto.response.MissioneResponse;
 import it.univaq.swa.soccorsoweb.model.entity.Missione;
 import it.univaq.swa.soccorsoweb.model.entity.MissioneOperatore;
@@ -35,7 +36,7 @@ public class MissioneService {
     private final UserRepository userRepository;
 
     public List<MissioneResponse> missioniValutateNegative() {
-        return missioneMapper.toResponseList(missioneRepository.findAllByLivelloSuccesso());
+        return missioneMapper.toResponseList(missioneRepository.findAllByLivelloSuccessoAndStato()); //livello hardcoded a 5 e stato hardocoded a CHIUSA
     }
 
     @Transactional
@@ -51,6 +52,16 @@ public class MissioneService {
         //Se la missione viene chiusa o fallita, imposta anche la data di fine
         if (nuovoStato == Missione.StatoMissione.CHIUSA || nuovoStato == Missione.StatoMissione.FALLITA) {
             missione.setFineAt(LocalDateTime.now());
+
+            // Libera gli operatori assegnati alla missione
+            if (missione.getMissioneOperatori() != null && !missione.getMissioneOperatori().isEmpty()) {
+                for (MissioneOperatore missioneOperatore : missione.getMissioneOperatori()) {
+                    User operatore = missioneOperatore.getOperatore();
+                    operatore.setDisponibile(true);
+                    userRepository.save(operatore);
+                }
+            }
+
             //Aggiorna anche lo stato della richiesta
             RichiestaSoccorso richiesta = missione.getRichiesta();
             if (richiesta != null) {
@@ -71,6 +82,15 @@ public class MissioneService {
     public void eliminaMissione(Long id) {
         Missione missione = missioneRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Missione non trovata con ID: " + id));
+
+        // Libera gli operatori assegnati alla missione
+        if (missione.getMissioneOperatori() != null && !missione.getMissioneOperatori().isEmpty()) {
+            for (MissioneOperatore missioneOperatore : missione.getMissioneOperatori()) {
+                User operatore = missioneOperatore.getOperatore();
+                operatore.setDisponibile(true);
+                userRepository.save(operatore);
+            }
+        }
 
         // Ripristina lo stato della richiesta
         RichiestaSoccorso richiesta = missione.getRichiesta();
@@ -103,7 +123,12 @@ public class MissioneService {
         if (missioneRequest.getOperatoriIds() != null && !missioneRequest.getOperatoriIds().isEmpty()) {
             Set<MissioneOperatore> missioneOperatori = new HashSet<>();
             List<User> operatori = userRepository.findAllById(missioneRequest.getOperatoriIds());
+
             for (User operatore : operatori) {
+                // Marca l'operatore come NON disponibile
+                operatore.setDisponibile(false);
+                userRepository.save(operatore);
+
                 MissioneOperatore missioneOperatore = new MissioneOperatore();
                 missioneOperatore.setOperatore(operatore);
                 missioneOperatore.setMissione(missione);
@@ -113,18 +138,33 @@ public class MissioneService {
                 missioneOperatore.setId(id);
                 missioneOperatori.add(missioneOperatore);
             }
-        }else{
+            missione.setMissioneOperatori(missioneOperatori);
+        } else {
             missione.setMissioneOperatori(new HashSet<>());
         }
-            return missioneMapper.toResponse(missioneRepository.save(missione));
+
+        // Salva la missione con gli operatori
+        Missione missioneSalvata = missioneRepository.save(missione);
+        return missioneMapper.toResponse(missioneSalvata);
     }
 
+    @Transactional
     public MissioneResponse chiudiMissione(Long id) {
 
         Missione missione = missioneRepository.findById(id).orElseThrow();
         missione.setStato(Missione.StatoMissione.CHIUSA);
         richiestaService.modificaRichiesta(missione.getRichiesta().getId(), "CHIUSA");
         missione.setFineAt(LocalDateTime.now());
+
+        // Libera gli operatori assegnati alla missione
+        if (missione.getMissioneOperatori() != null && !missione.getMissioneOperatori().isEmpty()) {
+            for (MissioneOperatore missioneOperatore : missione.getMissioneOperatori()) {
+                User operatore = missioneOperatore.getOperatore();
+                operatore.setDisponibile(true);
+                userRepository.save(operatore);
+            }
+        }
+
         Missione missioneSalvata = missioneRepository.save(missione);
         return missioneMapper.toResponse(missioneSalvata);
     }
@@ -144,5 +184,116 @@ public class MissioneService {
     public List<MissioneResponse> missioniOperatore(Long id) {
         List<Missione> missioni = missioneRepository.findAllByOperatoreId(id);
         return missioneMapper.toResponseList(missioni);
+    }
+
+    public List<MissioneResponse> tutteLeMissioni() {
+        List<Missione> missioni = missioneRepository.findAll();
+        return missioneMapper.toResponseList(missioni);
+    }
+
+    @Transactional
+    public MissioneResponse aggiornaMissione(Long id, MissioneUpdateRequest updateRequest) {
+        Missione missione = missioneRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Missione non trovata con ID: " + id));
+
+        // Aggiorna solo i campi forniti (non null)
+        if (updateRequest.getObiettivo() != null) {
+            missione.setObiettivo(updateRequest.getObiettivo());
+        }
+
+        if (updateRequest.getCaposquadraId() != null) {
+            User caposquadra = userRepository.findById(updateRequest.getCaposquadraId())
+                    .orElseThrow(() -> new EntityNotFoundException("Caposquadra non trovato con ID: " + updateRequest.getCaposquadraId()));
+            missione.setCaposquadra(caposquadra);
+        }
+
+        if (updateRequest.getPosizione() != null) {
+            missione.setPosizione(updateRequest.getPosizione());
+        }
+
+        if (updateRequest.getLatitudine() != null) {
+            missione.setLatitudine(updateRequest.getLatitudine());
+        }
+
+        if (updateRequest.getLongitudine() != null) {
+            missione.setLongitudine(updateRequest.getLongitudine());
+        }
+
+        if (updateRequest.getStato() != null) {
+            Missione.StatoMissione nuovoStato = Missione.StatoMissione.valueOf(updateRequest.getStato().toUpperCase());
+            missione.setStato(nuovoStato);
+
+            // Se la missione viene chiusa o fallita, imposta anche la data di fine
+            if (nuovoStato == Missione.StatoMissione.CHIUSA || nuovoStato == Missione.StatoMissione.FALLITA) {
+                missione.setFineAt(LocalDateTime.now());
+
+                // Libera gli operatori assegnati alla missione
+                if (missione.getMissioneOperatori() != null && !missione.getMissioneOperatori().isEmpty()) {
+                    for (MissioneOperatore missioneOperatore : missione.getMissioneOperatori()) {
+                        User operatore = missioneOperatore.getOperatore();
+                        operatore.setDisponibile(true);
+                        userRepository.save(operatore);
+                    }
+                }
+
+                // Aggiorna anche lo stato della richiesta
+                RichiestaSoccorso richiesta = missione.getRichiesta();
+                if (richiesta != null) {
+                    RichiestaSoccorso.StatoRichiesta statoRichiesta =
+                            nuovoStato == Missione.StatoMissione.CHIUSA
+                                    ? RichiestaSoccorso.StatoRichiesta.CHIUSA
+                                    : RichiestaSoccorso.StatoRichiesta.IGNORATA;
+                    richiesta.setStato(statoRichiesta);
+                }
+            }
+        }
+
+        if (updateRequest.getLivelloSuccesso() != null) {
+            missione.setLivelloSuccesso(updateRequest.getLivelloSuccesso());
+        }
+
+        if (updateRequest.getCommentiFinali() != null) {
+            missione.setCommentiFinali(updateRequest.getCommentiFinali());
+        }
+
+        // Gestisce operatori se forniti
+        if (updateRequest.getOperatoriIds() != null) {
+            // Prima libera i vecchi operatori (solo se la missione non è già chiusa)
+            if (missione.getStato() != Missione.StatoMissione.CHIUSA &&
+                missione.getStato() != Missione.StatoMissione.FALLITA) {
+                if (missione.getMissioneOperatori() != null && !missione.getMissioneOperatori().isEmpty()) {
+                    for (MissioneOperatore missioneOperatore : missione.getMissioneOperatori()) {
+                        User operatore = missioneOperatore.getOperatore();
+                        operatore.setDisponibile(true);
+                        userRepository.save(operatore);
+                    }
+                }
+            }
+
+            // Poi assegna i nuovi operatori
+            Set<MissioneOperatore> missioneOperatori = new HashSet<>();
+            if (!updateRequest.getOperatoriIds().isEmpty()) {
+                List<User> operatori = userRepository.findAllById(updateRequest.getOperatoriIds());
+                for (User operatore : operatori) {
+                    // Marca il nuovo operatore come NON disponibile
+                    operatore.setDisponibile(false);
+                    userRepository.save(operatore);
+
+                    MissioneOperatore missioneOperatore = new MissioneOperatore();
+                    missioneOperatore.setOperatore(operatore);
+                    missioneOperatore.setMissione(missione);
+                    MissioneOperatore.MissioneOperatoreId moid = new MissioneOperatore.MissioneOperatoreId();
+                    moid.setMissioneId(missione.getId());
+                    moid.setOperatoreId(operatore.getId());
+                    missioneOperatore.setId(moid);
+                    missioneOperatori.add(missioneOperatore);
+                }
+            }
+            missione.setMissioneOperatori(missioneOperatori);
+        }
+
+        missione.setUpdatedAt(LocalDateTime.now());
+        Missione missioneAggiornata = missioneRepository.save(missione);
+        return missioneMapper.toResponse(missioneAggiornata);
     }
 }

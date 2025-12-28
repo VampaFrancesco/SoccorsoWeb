@@ -2,6 +2,7 @@ package it.univaq.swa.soccorsoweb.service;
 
 import it.univaq.swa.soccorsoweb.mapper.RichiestaSoccorsoMapper;
 import it.univaq.swa.soccorsoweb.model.dto.request.RichiestaSoccorsoRequest;
+import it.univaq.swa.soccorsoweb.model.dto.request.RichiestaSoccorsoUpdateRequest;
 import it.univaq.swa.soccorsoweb.model.dto.response.MissioneResponse;
 import it.univaq.swa.soccorsoweb.model.dto.response.RichiestaSoccorsoResponse;
 import it.univaq.swa.soccorsoweb.model.entity.RichiestaSoccorso;
@@ -78,15 +79,14 @@ public class RichiestaService {
 
     }
 
-    public List<RichiestaSoccorsoResponse> richiesteFiltrate(@NotNull
-                                                             String stato) {
-        List<RichiestaSoccorso> list;
-        RichiestaSoccorso.StatoRichiesta statoEnum = RichiestaSoccorso.StatoRichiesta.valueOf(stato.toUpperCase());
-            if (stato != null && !stato.isEmpty()) {
-                return richiestaSoccorsoMapper.toResponseList(list = richiestaSoccorsoRepository.findAllByStato(statoEnum));
-            }
-            return null;
+    public List<RichiestaSoccorsoResponse> richiesteFiltrate(@NotNull String stato) {
+        if (stato.equalsIgnoreCase("TUTTE")) {
+            return richiestaSoccorsoMapper.toResponseList(richiestaSoccorsoRepository.findAll());
         }
+
+        RichiestaSoccorso.StatoRichiesta statoEnum = RichiestaSoccorso.StatoRichiesta.valueOf(stato.toUpperCase());
+        return richiestaSoccorsoMapper.toResponseList(richiestaSoccorsoRepository.findAllByStato(statoEnum));
+    }
 
     private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -128,6 +128,47 @@ public class RichiestaService {
         RichiestaSoccorso richiesta = richiestaSoccorsoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Richiesta non trovata con ID: " + id));
         richiesta.setStato(RichiestaSoccorso.StatoRichiesta.ANNULLATA);
+        richiesta.setUpdatedAt(LocalDateTime.now());
+        RichiestaSoccorso richiestaAggiornata = richiestaSoccorsoRepository.save(richiesta);
+        return richiestaSoccorsoMapper.toResponse(richiestaAggiornata);
+    }
+
+    @Transactional
+    public RichiestaSoccorsoResponse aggiornaRichiesta(Long id, RichiestaSoccorsoUpdateRequest updateRequest) {
+        RichiestaSoccorso richiesta = richiestaSoccorsoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Richiesta non trovata con ID: " + id));
+
+        // Aggiorna solo i campi forniti (non null)
+        if (updateRequest.getDescrizione() != null) {
+            richiesta.setDescrizione(updateRequest.getDescrizione());
+        }
+        if (updateRequest.getIndirizzo() != null) {
+            richiesta.setIndirizzo(updateRequest.getIndirizzo());
+        }
+        if (updateRequest.getLatitudine() != null) {
+            richiesta.setLatitudine(updateRequest.getLatitudine());
+        }
+        if (updateRequest.getLongitudine() != null) {
+            richiesta.setLongitudine(updateRequest.getLongitudine());
+        }
+        if (updateRequest.getNomeSegnalante() != null) {
+            richiesta.setNomeSegnalante(updateRequest.getNomeSegnalante());
+        }
+        if (updateRequest.getEmailSegnalante() != null) {
+            richiesta.setEmailSegnalante(updateRequest.getEmailSegnalante());
+        }
+        if (updateRequest.getFotoUrl() != null) {
+            richiesta.setFotoUrl(updateRequest.getFotoUrl());
+        }
+        if (updateRequest.getTelefonoSegnalante() != null) {
+            richiesta.setTelefonoSegnalante(updateRequest.getTelefonoSegnalante());
+        }
+        if (updateRequest.getStato() != null) {
+            RichiestaSoccorso.StatoRichiesta statoEnum =
+                RichiestaSoccorso.StatoRichiesta.valueOf(updateRequest.getStato().toUpperCase());
+            richiesta.setStato(statoEnum);
+        }
+
         richiesta.setUpdatedAt(LocalDateTime.now());
         RichiestaSoccorso richiestaAggiornata = richiestaSoccorsoRepository.save(richiesta);
         return richiestaSoccorsoMapper.toResponse(richiestaAggiornata);
